@@ -1,0 +1,87 @@
+<?php
+
+/**
+ * Implements hook_menu().
+ */
+function modal_test_menu() {
+  $items = array();
+
+  $items['modal/form-modal/%ctools_js/%'] = array(
+    'title' => 'CTools form examples links',
+    'page callback' => 'modal_test_form_modal_callback',
+    'page arguments' => array(2, 3),
+    'access callback' => TRUE,
+    'file' => 'modal_test.inc',
+    'type' => MENU_CALLBACK,
+  );
+
+  return $items;
+}
+
+
+/**
+ * Implements hook_field_extra_fields()
+ */
+function modal_test_field_extra_fields() {
+  $extra['node']['article']['display']['register'] = array(
+    'label' => 'sign',
+    'description' => 'sign',
+    'weight' => 40,
+  );
+  return $extra;
+}
+
+
+/**
+ * Implements hook_node_view()
+ */
+function modal_test_node_view($node, $view_mode, $langcode) {
+
+  // load ctools js
+  ctools_include('modal');
+  ctools_include('ajax');
+
+  ctools_modal_add_js();
+
+  $links = ctools_modal_text_button(t('点击报名'), 'modal/form-modal/nojs/' . $node->nid, t('Click for show a form in a modal window'), '');
+
+  $node->content['register'] = array(
+    '#markup' => $links
+  );
+}
+
+/**
+ * Callback to generate a simple modal form
+ */
+function modal_test_form_modal_callback($js = NULL, $nid = NULL) {
+
+  if($nid == NULL){
+    return 'there is not node id';
+  }
+
+  if (!$js) {
+    return drupal_get_form('cmodal_test_form');
+  }
+
+  ctools_include('modal');
+  ctools_include('ajax');
+
+  $form_state = array(
+    'title' => t('Please sign up'),
+    'ajax' => TRUE,
+  );
+
+  $form_state['values']['nid'] = $nid;
+
+
+  $output = ctools_modal_form_wrapper('modal_test_form', $form_state);
+
+  if (!empty($form_state['executed'])) {
+    // if success, overwrite the form output
+    $output = array();
+    $output[] = ctools_modal_command_display(t('报名成功'), '<div class="modal-message">Sign Up successful. <a href="">Go back</a>.</div>');
+  }
+  print(ajax_render($output));
+}
+
+
