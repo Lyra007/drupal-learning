@@ -1,0 +1,39 @@
+#header{
+    text-align: center;
+    height: 43em;
+}
+
+#with-secondary-menu{
+    height: 40em;
+}
+
+div#secondary-menu{
+    color: silver;
+
+    /*position: absolute;*/
+    /*bottom: 1em;*/
+    /*left: 18em;*/
+}
+
+
+#secondary-menu-links{
+    /*font-size:1.5em;*/
+}
+
+#secondary-menu-links li a{
+    color: silver;
+}
+
+#main-menu-links li a.active,
+#main-menu-links li.active-trail a {
+    background: #3c3c3c;
+    color: #8eba4e;
+
+}
+
+.views_slideshow_singleframe_slide {
+    left:50% !important;
+    margin-left:-465px;/**Half of the total desired width of the div**/
+    text-align:center;
+    width:930px !important;/**The total desired width of the div**/
+}

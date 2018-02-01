@@ -1,0 +1,6 @@
+name = modal_window_views
+description = This module is used to enable modal window in views
+core = 7.x
+
+dependencies[] = ctools
+dependencies[] = views

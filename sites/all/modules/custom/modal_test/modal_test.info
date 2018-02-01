@@ -1,5 +1,5 @@
 name = Modal test form
-description = Modal test form
+description = Modal test form to display a modal window in content
 core = 7.x
 
 version = "7.x-1.0"

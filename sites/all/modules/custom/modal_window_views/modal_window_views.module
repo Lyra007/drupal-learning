@@ -1,0 +1,58 @@
+<?php
+
+/**
+ * Implement hook_menu();
+ */
+function modal_window_views_menu()
+{
+  $items['edit/%ctools_js/%'] = array(
+    'title' => 'Sign up',
+    'page arguments' => array(1, 2),
+    'page callback' => '_custom_page_callback',
+    'access callback' => TRUE,
+    'file' => 'modal_window_views.inc',
+    'type' => MENU_NORMAL_ITEM,
+  );
+
+  return $items;
+}
+
+/**
+ * @param null $js
+ * @param null $nid
+ * a callback to implement ctools in achieve modal window
+ */
+function _custom_page_callback($js = NULL, $nid = NULL)
+{
+  global $user;
+
+  //Include ctools if page contains nojs
+  if($js)
+  {
+    ctools_include('modal');
+    ctools_include('ajax');
+    ctools_modal_add_js();
+  }
+
+  $form_state = array(
+    'title' => 'Sign Up',
+    'ajax' => TRUE
+  );
+
+  $form_state['values']['nid'] = $nid;
+  $output = ctools_modal_form_wrapper('modal_window_views_form', $form_state);
+
+
+  if (!empty($form_state['executed']))
+  {
+    $output = array();
+    //if success, reload
+    $path = 'http://localhost/test/user/'. $user->uid .'/joined';
+    ctools_add_js('ajax-responder');
+    $output[] = ctools_ajax_command_redirect($path);
+  }
+
+  print ajax_render($output);
+  exit;
+
+}

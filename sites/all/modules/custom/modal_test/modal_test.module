@@ -7,7 +7,7 @@ function modal_test_menu() {
   $items = array();
 
   $items['modal/form-modal/%ctools_js/%'] = array(
-    'title' => 'CTools form examples links',
+    'title' => 'Modal window',
     'page callback' => 'modal_test_form_modal_callback',
     'page arguments' => array(2, 3),
     'access callback' => TRUE,
@@ -15,15 +15,29 @@ function modal_test_menu() {
     'type' => MENU_CALLBACK,
   );
 
+  //returns a custom static page
+  $items['about'] = array(
+    'title' => 'About Sites and Me',
+    'page callback' => 'about_callback',
+    'access callback' => TRUE,
+    'type' => MENU_CALLBACK,
+
+  );
   return $items;
 }
 
+/**
+ * Implements about page
+ */
+function about_callback(){
+  return 'This is an about page';
+}
 
 /**
  * Implements hook_field_extra_fields()
  */
 function modal_test_field_extra_fields() {
-  $extra['node']['article']['display']['register'] = array(
+  $extra['node']['activity']['display']['register'] = array(
     'label' => 'sign',
     'description' => 'sign',
     'weight' => 40,
@@ -77,6 +91,7 @@ function modal_test_form_modal_callback($js = NULL, $nid = NULL) {
   $output = ctools_modal_form_wrapper('modal_test_form', $form_state);
 
   if (!empty($form_state['executed'])) {
+
     // if success, overwrite the form output
     $output = array();
     $output[] = ctools_modal_command_display(t('报名成功'), '<div class="modal-message">Sign Up successful. <a href="">Go back</a>.</div>');
