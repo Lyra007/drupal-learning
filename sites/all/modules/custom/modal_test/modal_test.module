@@ -10,8 +10,9 @@ function modal_test_menu() {
     'title' => 'Modal window',
     'page callback' => 'modal_test_form_modal_callback',
     'page arguments' => array(2, 3),
-    'access callback' => TRUE,
-    'file' => 'modal_test.inc',
+    //access callback is to check permission
+    'access callback' => 'user_is_logged_in',
+    'file' => 'modal_test.form.inc',
     'type' => MENU_CALLBACK,
   );
 
@@ -20,7 +21,7 @@ function modal_test_menu() {
     'title' => 'About Sites and Me',
     'page callback' => 'about_callback',
     'access callback' => TRUE,
-    'type' => MENU_CALLBACK,
+    'type' => MENU_NORMAL_ITEM,
 
   );
   return $items;
@@ -57,7 +58,7 @@ function modal_test_node_view($node, $view_mode, $langcode) {
 
   ctools_modal_add_js();
 
-  $links = ctools_modal_text_button(t('点击报名'), 'modal/form-modal/nojs/' . $node->nid, t('Click for show a form in a modal window'), '');
+  $links = ctools_modal_text_button(t('点击报名'), 'modal/form-modal/nojs/' . $node->nid, t(' Sign Up'), '');
 
   $node->content['register'] = array(
     '#markup' => $links

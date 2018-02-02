@@ -174,8 +174,8 @@ function modal_test_form_validate($form, &$form_state) {
       if (strlen($mobile) != 11) {
         form_set_error('mobile', t('第'.$row_num.'组手机号长度必须是十一位'));
       }
-      if (!is_valid_phone($mobile)) {
-        form_set_error('mobile', t('第'.$row_num.'组中手机号码无效, 必须在此范围内（131,132,133,135,136,139,151,152,153,156,158,159,188）'));
+      if($error = is_valid_phone($mobile)){
+        form_set_error('mobile', t('手机号码无效,' . $error['msg'] ));
       }
       if (number_is_in_db($mobile, $nid)) {
         form_set_error('mobile', t('第'.$row_num.'组中有被使用的手机号'));

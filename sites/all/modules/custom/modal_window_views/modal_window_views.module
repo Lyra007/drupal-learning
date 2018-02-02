@@ -52,7 +52,7 @@ function _modal_window_callback($js = NULL, $nid = NULL)
     $output = array();
     //if success, reload
     $path = $base_url. '/user/'. $user->uid .'/joined';
-    var_dump($path);
+//    var_dump($path);
 
     ctools_add_js('ajax-responder');
     $output[] = ctools_ajax_command_redirect($path);
