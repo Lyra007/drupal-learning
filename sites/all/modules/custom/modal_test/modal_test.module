@@ -74,7 +74,7 @@ function modal_test_form_modal_callback($js = NULL, $nid = NULL) {
   }
 
   if (!$js) {
-    return drupal_get_form('cmodal_test_form');
+    return drupal_get_form('modal_test_form');
   }
 
   ctools_include('modal');

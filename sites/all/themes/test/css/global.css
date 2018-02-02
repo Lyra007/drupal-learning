@@ -1,3 +1,8 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
 #header{
     text-align: center;
     height: 43em;
@@ -16,6 +21,22 @@ div#secondary-menu{
 }
 
 
+
+tr td, tr th{
+
+    background-color: #fff;
+    /*box-shadow: 0 2px 2px rgba(0,0,0,0.4);*/
+}
+div.views-field{
+    /*text-align: center;*/
+}
+
+div.views-field.views-field-title a{
+    text-align: center;
+    /*color: #8eba4e;*/
+    /*background: #3c3c3c;*/
+
+}
 #secondary-menu-links{
     /*font-size:1.5em;*/
 }
@@ -36,4 +57,19 @@ div#secondary-menu{
     margin-left:-465px;/**Half of the total desired width of the div**/
     text-align:center;
     width:930px !important;/**The total desired width of the div**/
+}
+
+
+@media screen and (max-width: 840px) {
+    #logo {
+        display: none;
+    }
+
+}
+
+@media screen and (max-width: 580px) {
+
+    .views_slideshow_singleframe_slide{
+        display: none;
+    }
 }

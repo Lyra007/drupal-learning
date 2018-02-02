@@ -50,18 +50,20 @@ function modal_window_views_form($form, &$form_state)
  * whether it is a valid phone number
  */
 
-function IsValidPhone($mobile){
+function is_valid_phone($mobile){
   //check for phone validation
   //ranges are 131,132,133,135,136,139,151,152,153,156,158,159,188
 
   preg_match("/13[123569]{1}\d{8}|15[1235689]\d{8}|188\d{8}/", $mobile, $array);
 
 //  var_dump($array);
-  if(count($array))
-  {
-    return TRUE;
-  }
-    return FALSE;
+//  if(count($array))
+//
+//    return TRUE;
+//  }
+//    return FALSE;
+//
+  return count($array) > 0;
 }
 
 
@@ -70,16 +72,19 @@ function IsValidPhone($mobile){
  * wthether the number is in db
  */
 
-function numberIsInDB($mobile){
+function number_is_in_db($mobile, $nid){
 
  $query = new EntityFieldQuery();
 
  $query -> entityCondition('entity_type', 'node')
    ->entityCondition('bundle', 'sighupsheet')
    ->propertyCondition('status', NODE_PUBLISHED)
-   ->fieldCondition('field_mobile', 'value', $mobile, '=')->count();
+   ->fieldCondition('field_mobile', 'value', $mobile, '=')
+   ->fieldCondition('field_activity', 'target_id', $nid, '=')
+   ->count();
 
-  return $query->execute() > 0 ? TRUE : FALSE;
+
+  return $query->execute() > 0 ;
 }
 
 
@@ -94,14 +99,16 @@ function numberIsInDB($mobile){
 function modal_window_views_form_validate($form, &$form_state)
 {
   $mobile = $form_state['values']['mobile'];
+  $nid = $form_state['values']['nid'];
+
   //check for phone
   if(strlen($mobile) != 11 ){
     form_set_error('mobile', t('手机号长度必须是十一位'));
   }
-  if(!IsValidPhone($mobile)){
+  if(!is_valid_phone($mobile)){
     form_set_error('mobile', t('手机号码无效, 必须在此范围内（131,132,133,135,136,139,151,152,153,156,158,159,188）'));
   }
-  if(numberIsInDB($mobile)){
+  if(number_is_in_db($mobile, $nid)){
     form_set_error('mobile', t('该手机号已经被使用'));
   }
 

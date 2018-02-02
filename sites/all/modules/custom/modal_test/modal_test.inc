@@ -97,7 +97,7 @@ function modal_test_form($form, &$form_state){
  * check whether it is a valid phone number
  */
 
-function IsValidPhone($mobile){
+function is_valid_phone($mobile){
   //check for phone validation
   //ranges are 131,132,133,135,136,139,151,152,153,156,158,159,188
 
@@ -116,14 +116,16 @@ function IsValidPhone($mobile){
  * check wthether the number is in db
  */
 
-function numberIsInDB($mobile){
+function number_is_in_db($mobile, $nid){
 
   $query = new EntityFieldQuery();
 
   $query -> entityCondition('entity_type', 'node')
     ->entityCondition('bundle', 'sighupsheet')
     ->propertyCondition('status', NODE_PUBLISHED)
-    ->fieldCondition('field_mobile', 'value', $mobile, '=')->count();
+    ->fieldCondition('field_mobile', 'value', $mobile, '=')
+    ->fieldCondition('field_activity', 'target_id', $nid, '=')
+    ->count();
 
   return $query->execute() > 0 ? TRUE : FALSE;
 }
@@ -149,9 +151,11 @@ function modal_test_form_validate($form, &$form_state) {
 
   $arr = $form_state['values']['info_fieldset'];
   $whole = array();
+
   for($i = 0; $arr[$i]!= NULL; $i++) {
     $name = $arr[$i]['name'];
     $mobile = $arr[$i]['mobile'];
+    $nid = $arr[$i]['nid'];
 
     //check if name is set
     if(empty($name)){
@@ -165,15 +169,15 @@ function modal_test_form_validate($form, &$form_state) {
 
     //check if it is in whole array
     if(!isset($whole[$mobile])) {
-      $whole[$mobile] = $i;
+      $whole[$mobile] = $i+1;
       //check for phone
       if (strlen($mobile) != 11) {
         form_set_error('mobile', t('第'.$row_num.'组手机号长度必须是十一位'));
       }
-      if (!IsValidPhone($mobile)) {
+      if (!is_valid_phone($mobile)) {
         form_set_error('mobile', t('第'.$row_num.'组中手机号码无效, 必须在此范围内（131,132,133,135,136,139,151,152,153,156,158,159,188）'));
       }
-      if (numberIsInDB($mobile)) {
+      if (number_is_in_db($mobile, $nid)) {
         form_set_error('mobile', t('第'.$row_num.'组中有被使用的手机号'));
       }
     }else{
