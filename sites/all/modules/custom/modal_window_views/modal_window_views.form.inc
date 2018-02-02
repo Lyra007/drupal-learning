@@ -53,17 +53,13 @@ function modal_window_views_form($form, &$form_state)
 function is_valid_phone($mobile){
   //check for phone validation
   //ranges are 131,132,133,135,136,139,151,152,153,156,158,159,188
+  $error = array();
+  $check = preg_match("/13[123569]{1}\d{8}|15[1235689]\d{8}|188\d{8}/", $mobile, $array);
+  if(!$check){
+    $error['msg'] = '必须在此范围内（131,132,133,135,136,139,151,152,153,156,158,159,188)';
+  }
 
-  preg_match("/13[123569]{1}\d{8}|15[1235689]\d{8}|188\d{8}/", $mobile, $array);
-
-//  var_dump($array);
-//  if(count($array))
-//
-//    return TRUE;
-//  }
-//    return FALSE;
-//
-  return count($array) > 0;
+  return $error;
 }
 
 
@@ -72,7 +68,7 @@ function is_valid_phone($mobile){
  * wthether the number is in db
  */
 
-function number_is_in_db($mobile, $nid){
+function number_is_exist($mobile, $nid){
 
  $query = new EntityFieldQuery();
 
@@ -105,10 +101,10 @@ function modal_window_views_form_validate($form, &$form_state)
   if(strlen($mobile) != 11 ){
     form_set_error('mobile', t('手机号长度必须是十一位'));
   }
-  if(!is_valid_phone($mobile)){
-    form_set_error('mobile', t('手机号码无效, 必须在此范围内（131,132,133,135,136,139,151,152,153,156,158,159,188）'));
+  if($error = is_valid_phone($mobile)){
+    form_set_error('mobile', t('手机号码无效,' . $error['msg'] ));
   }
-  if(number_is_in_db($mobile, $nid)){
+  if(number_is_exist($mobile, $nid)){
     form_set_error('mobile', t('该手机号已经被使用'));
   }
 
@@ -117,7 +113,7 @@ function modal_window_views_form_validate($form, &$form_state)
 /**
  * @param $form
  * @param $form_state
- * a form submition
+ * a form submition for content [signupsheet only
  */
 function modal_window_views_form_submit($form, &$form_state)
 {

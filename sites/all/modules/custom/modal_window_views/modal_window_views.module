@@ -8,21 +8,24 @@ function modal_window_views_menu()
   $items['edit/%ctools_js/%'] = array(
     'title' => 'Sign up',
     'page arguments' => array(1, 2),
-    'page callback' => '_custom_page_callback',
-    'access callback' => TRUE,
-    'file' => 'modal_window_views.inc',
-    'type' => MENU_NORMAL_ITEM,
+    'page callback' => '_modal_window_callback',
+    'access callback' => 'user_is_logged_in',
+    'file' => 'modal_window_views.form.inc',
+    'type' => MENU_CALLBACK,
   );
 
   return $items;
 }
+
+
+
 
 /**
  * @param null $js
  * @param null $nid
  * a callback to implement ctools in achieve modal window
  */
-function _custom_page_callback($js = NULL, $nid = NULL)
+function _modal_window_callback($js = NULL, $nid = NULL)
 {
   global $user;
 
@@ -42,12 +45,15 @@ function _custom_page_callback($js = NULL, $nid = NULL)
   $form_state['values']['nid'] = $nid;
   $output = ctools_modal_form_wrapper('modal_window_views_form', $form_state);
 
+    global $base_url;
 
   if (!empty($form_state['executed']))
   {
     $output = array();
     //if success, reload
-    $path = 'http://localhost/test/user/'. $user->uid .'/joined';
+    $path = $base_url. '/user/'. $user->uid .'/joined';
+    var_dump($path);
+
     ctools_add_js('ajax-responder');
     $output[] = ctools_ajax_command_redirect($path);
   }
