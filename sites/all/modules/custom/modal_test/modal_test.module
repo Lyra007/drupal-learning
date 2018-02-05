@@ -6,7 +6,7 @@
 function modal_test_menu() {
   $items = array();
 
-  $items['modal/form-modal/%ctools_js/%'] = array(
+  $items['modal/form-modal/%ctool/%node'] = array(
     'title' => 'Modal window',
     'page callback' => 'modal_test_form_modal_callback',
     'page arguments' => array(2, 3),
